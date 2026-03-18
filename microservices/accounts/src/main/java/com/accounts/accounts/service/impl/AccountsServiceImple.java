@@ -1,16 +1,26 @@
 package com.accounts.accounts.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.accounts.accounts.constants.AccountsConstants;
 import com.accounts.accounts.dto.CustomerDto;
 import com.accounts.accounts.entity.Accounts;
 import com.accounts.accounts.entity.Customer;
+import com.accounts.accounts.exception.CustomerAlreadyExistException;
 import com.accounts.accounts.mapper.CustomerMapper;
 import com.accounts.accounts.repo.AccountsRepo;
 import com.accounts.accounts.repo.CustomerRepo;
 import com.accounts.accounts.service.IAccountService;
 
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
 public class AccountsServiceImple implements IAccountService{
     private AccountsRepo accountsRepo;
     private CustomerRepo customerRepo;
@@ -18,7 +28,18 @@ public class AccountsServiceImple implements IAccountService{
     public void createAccount(CustomerDto customerDto) {
       
         Customer customer=CustomerMapper.mapToCustomer(customerDto, new Customer());
+        Optional<Customer> optionalCustomer=customerRepo.findByMobileNumber(customerDto.getMobileNumber());
+        if(optionalCustomer.isPresent()){
+            throw new CustomerAlreadyExistException(
+              "Customer already registered with given mobile number"
+              +customerDto.getMobileNumber()  
+            );
+        }
+        customer.setCreatedAt(LocalDateTime.now());
+        customer.setCreatedBy("null");
+
         Customer savedCustomer=customerRepo.save(customer);
+        System.out.println(savedCustomer);
         accountsRepo.save(createNewAccount(savedCustomer));
     }
 
@@ -47,6 +68,8 @@ public class AccountsServiceImple implements IAccountService{
         newAccount.setAccountNumber(randomAccNumber);
         newAccount.setAccountType(AccountsConstants.Savings);
         newAccount.setBranchAddress(AccountsConstants.Address);
+        newAccount.setCreatedAt(LocalDateTime.now());
+        newAccount.setCreatedBy("null");
         return newAccount;
     }
 }
