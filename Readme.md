@@ -17,3 +17,16 @@
 			</plugin>
     ```
     3. google jib
+
+6. Layman defination
+7. Hyrums's defination
+8. CNCF: Cloud Native Computing Foundation
+	1. Microservices
+	2. Containers
+	3. Scalability
+	4. Elasticity
+	5. DevOps Practices
+	6. Resilience & Fault Tolerance
+	7. Cloud native services
+9. Heroku cloud platform introduced 12 factor methodolgy.
+10. 

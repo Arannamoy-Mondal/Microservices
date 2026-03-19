@@ -1,6 +1,9 @@
 package com.accounts.accounts.controller;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
@@ -38,6 +41,18 @@ import lombok.AllArgsConstructor;
 public class AccountsController {
     // @Autowired
     private IAccountService iAccountService;
+
+    @Autowired
+    private Environment environment;
+    @GetMapping("/java-version")
+    public ResponseEntity<?> getJavaVersion(){
+            try {
+                // System.out.println(Runtime.version().toString());
+                return ResponseEntity.status(HttpStatus.OK).body(System.getProperty("java.version"));
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
+        }
 
     @PostMapping("/create")
     @Operation(summary = "Create Account REST API", description = "REST API to create new Customer &  Account inside ")
