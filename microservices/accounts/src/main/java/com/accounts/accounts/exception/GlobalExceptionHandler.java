@@ -12,31 +12,42 @@ import com.accounts.accounts.dto.ErrorResponseDto;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+        @ExceptionHandler(Exception.class)
+        public ResponseEntity<ErrorResponseDto> handleGlobalException(
+                        Exception exception,
+                        WebRequest webRequest) {
+                ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+                                webRequest.getDescription(false),
+                                HttpStatus.INTERNAL_SERVER_ERROR,
+                                exception.getMessage(),
+                                LocalDateTime.now());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .body(errorResponseDto);
+        }
 
-    @ExceptionHandler(ResourceNotFoundException.class )
-    public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(
-            CustomerAlreadyExistException exception,
-            WebRequest webRequest) {
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
-                webRequest.getDescription(false),
-                HttpStatus.NOT_FOUND,
-                exception.getMessage(),
-                LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(errorResponseDto);
-    }
+        @ExceptionHandler(ResourceNotFoundException.class)
+        public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(
+                        CustomerAlreadyExistException exception,
+                        WebRequest webRequest) {
+                ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+                                webRequest.getDescription(false),
+                                HttpStatus.NOT_FOUND,
+                                exception.getMessage(),
+                                LocalDateTime.now());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body(errorResponseDto);
+        }
 
-
-    @ExceptionHandler(CustomerAlreadyExistException.class )
-    public ResponseEntity<ErrorResponseDto> handleCustomerAlreadyExistsException(
-            CustomerAlreadyExistException exception,
-            WebRequest webRequest) {
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
-                webRequest.getDescription(false),
-                HttpStatus.BAD_REQUEST,
-                exception.getMessage(),
-                LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(errorResponseDto);
-    }
+        @ExceptionHandler(CustomerAlreadyExistException.class)
+        public ResponseEntity<ErrorResponseDto> handleCustomerAlreadyExistsException(
+                        CustomerAlreadyExistException exception,
+                        WebRequest webRequest) {
+                ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+                                webRequest.getDescription(false),
+                                HttpStatus.BAD_REQUEST,
+                                exception.getMessage(),
+                                LocalDateTime.now());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(errorResponseDto);
+        }
 }

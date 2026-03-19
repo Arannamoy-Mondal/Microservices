@@ -64,14 +64,39 @@ public class AccountsServiceImple implements IAccountService{
 
     @Override
     public boolean updateAccount(CustomerDto customerDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateAccount'");
+        boolean isUpdated=false;
+        AccountsDto accountsDto=customerDto.getAccountsDto();
+        if(accountsDto!=null){
+            Accounts accounts=accountsRepo.findById(accountsDto.getAccountNumber())
+            .orElseThrow(()->new ResourceNotFoundException("Account", "AccountNumber",
+             accountsDto.getAccountNumber().toString()));
+             AccountsMapper.mapToAccounts(accounts, accountsDto);
+             accounts=accountsRepo.save(accounts);
+             Long customerId=accounts.getCustomerId();
+             Customer customer=customerRepo.findById(customerId)
+             .orElseThrow(()->
+            new ResourceNotFoundException("Customer", "CustomerId", customerId.toString())
+            );
+            CustomerMapper.mapToCustomer(customerDto, customer);
+            customerRepo.save(customer);
+            isUpdated=true;
+        }
+        return isUpdated;
     }
 
     @Override
     public boolean deleteAccount(String mobileNumber) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteAccount'");
+        // System.out.println(mobileNumber);
+        Customer customer=customerRepo.findByMobileNumber(mobileNumber)
+        // .orElse(null);
+        .orElseThrow(
+            ()-> new ResourceNotFoundException("Customer", "mobile number", mobileNumber)
+        );
+        System.out.println(accountsRepo.findByCustomerId(customer.getCustomerId()));
+        accountsRepo.deleteByCustomerId(customer.getCustomerId());
+        customerRepo.deleteById(customer.getCustomerId());
+
+        return true;
     }
     
     private Accounts createNewAccount(Customer customer){
