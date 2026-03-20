@@ -70,6 +70,11 @@ mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xmx2g -Xms512m"
 
 # 12. Fault Tolerance
 1. Resilience4j 
+ 1. Circuit breaker: Used to stop making requests when a service invoked is failing
+ 2. Fallback: Alternative paths to failing requests
+ 3. Retry: Used to make retries when  a service has temporarily failed
+ 4. Rate limit: Limits the number of calls that a service receives in a time
+ 5. Bulhead: Limits the number of outgoing concurrent requests to  a service to avoid overloading.
 
 # 13. Gateway: Reactive gateway
 
