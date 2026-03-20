@@ -81,4 +81,22 @@
 		spring.cloud.gateway.server.webflux.discovery.locator.lower-case-service-id=true
 		spring.main.web-application-type=reactive
 	```
-	
+	`URL:http://localhost:${port no}/actuator/gateway/routes`
+
+	`Code for custom configuration:`
+	```java
+		@Configuration
+		public class CustomRouteLocator {
+			@Bean
+			RouteLocator routeLocator(RouteLocatorBuilder builder) {
+				return builder.routes()
+						.route(p -> p.path("/hello/ac/**")
+								.filters(f -> f.rewritePath("/hello/accounts/(?<segment>.*)", "/${segment}"))
+								.uri("lb://ACCOUNTS"))
+						.route(p -> p.path("/hello/loans/**")
+								.filters(f -> f.rewritePath("/hello/loans/(?<segment>.*)", "/${segment}"))
+								.uri("lb://LOANS"))
+						.build();
+			}
+		}
+	```
