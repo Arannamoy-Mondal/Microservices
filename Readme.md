@@ -32,13 +32,15 @@
 10. Service discovery agent
   1. Netflix Eureka:
 	`application.properties for client side`
-	```bash
+
+	```yml
 	eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
 	eureka.instance.prefer-ip-address=true
 	eureka.instance.hostname=localhost
 	```
 	`application.properties for server side`
-	```bash
+
+	```yml
 	eureka.client.register-with-eureka=false
 	eureka.client.fetch-registry=false
 	eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
@@ -49,6 +51,7 @@
 	```bash
 	mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xmx2g -Xms512m"
 	```
+	
   2. Consul
   3. Apache Zookeeper
 11. Load balancing
